@@ -1,0 +1,27 @@
+* Purpose
+  After reading
+  https://wingolog.org/archives/2018/05/16/lightweight-concurrency-in-lua
+  and https://wingolog.org/archives/2017/06/27/growing-fibers it seems
+  one can have pretty decent concurrency features from a quite simple
+  primitive baseline. It'd be nice to be able to have sophisticated
+  stuff in emacs on top of threads.
+
+  In the lua implementation there's an example of using coroutines for
+  that, and it seems to me that emacs' cooperative threads are somehow
+  close to them.
+
+  My blind spots are how to "restart" a thread from a "yielded
+  state". I guess the scheduler would be synched via condvars to each
+  one of the threads' mutexes and work in a kind of "star" graph,
+  updating the threads' cond vars of the threads it wants to be
+  runnable. Then, yielding himself would probably lead to make that
+  chosen thread the next one that runs.
+
+  Here I have some questions like: How does the scheduler thread
+  compare to the main thread? Or threads are always "2nd class
+  citizens" if we compare them with the main emacs' runloop?
+
+** references:
+   - (info "(elisp)Threads")
+   - https://github.com/emacs-mirror/emacs/blob/master/test/src/thread-tests.el
+   - https://github.com/emacs-mirror/emacs/blob/master/src/thread.c
